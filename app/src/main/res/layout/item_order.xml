@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/orderIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Заказ ID: 1"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pickupLocationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Место подачи: Ул. Ленина, д.1"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/dropoffLocationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Место назначения: Ул. Пушкина, д.2"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/driverNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Водитель: Иванов И.И."
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/orderStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Статус: Выполнен"
+        android:textSize="14sp" />
+</LinearLayout>

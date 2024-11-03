@@ -33,6 +33,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        val buttoOrders = findViewById<Button>(R.id.ordersButton)
+        buttoOrders.setOnClickListener{
+            val intent = Intent(this@MainActivity, OrdersActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 }
