@@ -28,10 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val buttoDrivers = findViewById<Button>(R.id.driversButton)
         buttoDrivers.setOnClickListener{
-            val intent = Intent(
-                this@MainActivity,
-                DriverActivity::class.java
-            )
+            val intent = Intent(this@MainActivity, DriverActivity::class.java)
             startActivity(intent)
         }
 
