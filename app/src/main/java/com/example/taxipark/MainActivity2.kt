@@ -5,11 +5,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.taxipark.DatabaseHelper.DatabaseHelper;
 
 class MainActivity2 : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main2) // Убедитесь, что это правильный макет
+            setContentView(R.layout.activity_main2)
 
     }
 }
