@@ -2,6 +2,7 @@ package com.example.taxipark
 
 import android.content.Intent
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth;
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
@@ -13,9 +14,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
-
-
 
         val buttonAuto = findViewById<Button>(R.id.carsButton)
 
