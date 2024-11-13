@@ -1,5 +1,6 @@
 package com.example.taxipark
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth;
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,18 @@ class MainActivity : AppCompatActivity() {
         val buttoOrders = findViewById<Button>(R.id.ordersButton)
         buttoOrders.setOnClickListener{
             val intent = Intent(this@MainActivity, OrdersActivity::class.java)
+            startActivity(intent)
+        }
+
+        val buttonRegistration = findViewById<Button>(R.id.loginButton)
+        buttonRegistration.setOnClickListener{
+            val intent = Intent(this@MainActivity,RegistrationActivity::class.java)
+            startActivity(intent)
+        }
+
+        val buttonAuth = findViewById<Button>(R.id.authButton)
+        buttonAuth.setOnClickListener{
+            val intent = Intent(this@MainActivity,AuthActivity::class.java)
             startActivity(intent)
         }
 

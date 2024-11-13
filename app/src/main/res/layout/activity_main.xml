@@ -86,16 +86,25 @@
         android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Авторизация"
-        app:layout_constraintTop_toBottomOf="@id/statusAuto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="8dp"
         android:elevation="4dp"
-        android:layout_marginBottom="16dp"/>
+        android:text="Регистрация"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusAuto" />
 
-
-
+    <Button
+        android:id="@+id/authButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:elevation="4dp"
+        android:text="Авторизация"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusAuto" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

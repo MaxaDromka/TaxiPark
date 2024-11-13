@@ -1,96 +1,42 @@
 package com.example.taxipark.DatabaseHelper
 
+import android.content.ContentValues
 import android.content.Context
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
+import com.example.taxipark.User
 
 
-class DatabaseHelper(context: Context) :
-    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    private var mDataBase: SQLiteDatabase? = null
-    private val mContext: Context
-    private var mNeedUpdate = false
+class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFactory?) :
+    SQLiteOpenHelper(context,"DB",factory,1) {
 
-    init {
-        if (Build.VERSION.SDK_INT >= 17) DB_PATH = context.applicationInfo.dataDir + "/databases/"
-        else DB_PATH = "/data/data/" + context.packageName + "/databases/"
-        this.mContext = context
 
-        copyDataBase()
-
-        this.readableDatabase
+    override fun onCreate(db: SQLiteDatabase?) {
+        val query = "CREATE TABLE users (id INT PRIMARY KEY,login TEXT,password TEXT)"
+        db!!.execSQL(query)
     }
 
-    @Throws(IOException::class)
-    fun updateDataBase() {
-        if (mNeedUpdate) {
-            val dbFile = File(DB_PATH + DB_NAME)
-            if (dbFile.exists()) dbFile.delete()
-
-            copyDataBase()
-
-            mNeedUpdate = false
-        }
+    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+        db!!.execSQL("DROP TABLE IF EXISTS users")
+        onCreate(db)
     }
 
-    private fun checkDataBase(): Boolean {
-        val dbFile = File(DB_PATH + DB_NAME)
-        return dbFile.exists()
+    fun addUser(user: User){
+        val values = ContentValues()
+        values.put("login",user.login)
+        values.put("password",user.password)
+
+        val db = this.writableDatabase
+        db.insert("users",null,values)
+
+        db.close()
+
     }
 
-    private fun copyDataBase() {
-        if (!checkDataBase()) {
-            this.readableDatabase
-            this.close()
-            try {
-                copyDBFile()
-            } catch (mIOException: IOException) {
-                throw Error("ErrorCopyingDataBase")
-            }
-        }
+    fun getUser(login:String,password:String):Boolean{
+        val db = this.readableDatabase
+        val result = db.rawQuery(" SELECT * FROM users WHERE login = '$login' AND password = '$password' ",null)
+        return result.moveToFirst()
     }
 
-    @Throws(IOException::class)
-    private fun copyDBFile() {
-        val mInput = mContext.assets.open(DB_NAME)
-        val mOutput: OutputStream = FileOutputStream(DB_PATH + DB_NAME)
-        val mBuffer = ByteArray(1024)
-        var mLength: Int
-        while ((mInput.read(mBuffer).also { mLength = it }) > 0) mOutput.write(mBuffer, 0, mLength)
-        mOutput.flush()
-        mOutput.close()
-        mInput.close()
-    }
-
-    @Throws(SQLException::class)
-    fun openDataBase(): Boolean {
-        mDataBase =
-            SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.CREATE_IF_NECESSARY)
-        return mDataBase != null
-    }
-
-    @Synchronized
-    override fun close() {
-        if (mDataBase != null) mDataBase!!.close()
-        super.close()
-    }
-
-    override fun onCreate(db: SQLiteDatabase) {
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (newVersion > oldVersion) mNeedUpdate = true
-    }
-
-    companion object {
-        private const val DB_NAME = "BDTAxiPark.db"
-        private var DB_PATH = ""
-        private const val DB_VERSION = 1
-    }
 }
