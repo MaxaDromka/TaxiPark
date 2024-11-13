@@ -9,8 +9,6 @@ import com.example.taxipark.User
 
 class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context,"DB",factory,1) {
-
-
     override fun onCreate(db: SQLiteDatabase?) {
         val query = "CREATE TABLE users (id INT PRIMARY KEY,login TEXT,password TEXT)"
         db!!.execSQL(query)
