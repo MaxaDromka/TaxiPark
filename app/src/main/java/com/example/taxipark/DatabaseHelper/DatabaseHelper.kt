@@ -15,12 +15,10 @@ class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFact
         val query = "CREATE TABLE users (id INT PRIMARY KEY,login TEXT,password TEXT)"
         db!!.execSQL(query)
     }
-
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS users")
         onCreate(db)
     }
-
     fun addUser(user: User){
         val values = ContentValues()
         values.put("login",user.login)
@@ -28,7 +26,6 @@ class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFact
 
         val db = this.writableDatabase
         db.insert("users",null,values)
-
         db.close()
 
     }
