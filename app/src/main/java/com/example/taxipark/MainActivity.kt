@@ -6,16 +6,24 @@ import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth;
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import com.example.taxipark.DatabaseHelper.DatabaseHelper
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var databaseHelper: DatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        databaseHelper = DatabaseHelper(this,null)
 
         val buttonAuto = findViewById<Button>(R.id.carsButton)
 
