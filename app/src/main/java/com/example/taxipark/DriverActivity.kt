@@ -1,67 +1,56 @@
-package com.example.taxipark;
+package com.example.taxipark
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.example.taxipark.DatabaseHelper.DatabaseHelper
 
-import androidx.appcompat.app.AppCompatActivity;
+class DriverActivity : AppCompatActivity() {
 
-import com.example.taxipark.DatabaseHelper.DatabaseHelper;
+    private lateinit  var databaseHelper: DatabaseHelper
+    private lateinit var driverInfoTextView: TextView
 
-import java.util.List;
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_drivers)
 
-public class DriverActivity extends AppCompatActivity {
+        driverInfoTextView = findViewById(R.id.driver_info_text_view)
 
-    private LinearLayout driversLayout; // LinearLayout для отображения водителей
-    private Button addDriverButton; // Кнопка для добавления нового водителя
-    private DatabaseHelper databaseHelper; // База данных
+        // Initialize DatabaseHelper
+        databaseHelper = DatabaseHelper(this,null)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drivers); // Убедитесь, что это правильный макет
-
-        // Инициализация базы данных
-        databaseHelper = new DatabaseHelper(this,null);
-
-        // Инициализация элементов интерфейса
-        driversLayout = findViewById(R.id.driversLayout);
-        addDriverButton = findViewById(R.id.addDriverButton);
-
-        // Отображение водителей
-        displayDrivers();
-
-        // Установка обработчика нажатия для кнопки добавления водителя
-        addDriverButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Логика для добавления нового водителя (например, открытие нового экрана)
-            }
-        });
+        // Fetch and display driver information
+        displayDriverInfo()
     }
 
-    private void displayDrivers() {
-        driversLayout.removeAllViews(); // Очистка предыдущих записей
+    @SuppressLint("Range")
+    private fun displayDriverInfo() {
+        val db = databaseHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM Drivers", null)
 
-        // Получение списка водителей из базы данных
-        List<Driver> drivers = databaseHelper.getAllDrivers();
+        if (cursor.moveToFirst()) {
+            val driverId = cursor.getInt(cursor.getColumnIndex("DriverID"))
+            val name = cursor.getString(cursor.getColumnIndex("Name"))
+            val licenseNumber = cursor.getString(cursor.getColumnIndex("LicenseNumber"))
+            val phoneNumber = cursor.getString(cursor.getColumnIndex("PhoneNumber"))
+            val rating = cursor.getDouble(cursor.getColumnIndex("Rating"))
 
-        if (drivers.isEmpty()) {
-            TextView noDriversTextView = new TextView(this);
-            noDriversTextView.setText("Нет доступных водителей.");
-            driversLayout.addView(noDriversTextView);
+            // Format the driver information
+            val driverInfo = "Driver ID: $driverId\n" +
+                    "Name: $name\n" +
+                    "License Number: $licenseNumber\n" +
+                    "Phone Number: $phoneNumber\n" +
+                    "Rating: $rating"
+
+            // Display the information in TextView
+            driverInfoTextView.text = driverInfo
         } else {
-            for (Driver driver : drivers) {
-                // Создание текстового представления для каждого водителя
-                TextView textView = new TextView(this);
-                textView.setText("Имя: " + driver.getName() +
-                        ", Лицензия: " + driver.getLicenseNumber() +
-                        ", Телефон: " + driver.getPhoneNumber() +
-                        ", Рейтинг: " + driver.getRating());
-                driversLayout.addView(textView);
-            }
+            driverInfoTextView.text = "No driver information available."
         }
+
+        cursor.close()
+        db.close()
     }
 }
