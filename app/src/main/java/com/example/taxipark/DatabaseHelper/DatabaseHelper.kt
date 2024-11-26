@@ -9,51 +9,44 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.taxipark.Driver
 import com.example.taxipark.User
 
+class DatabaseHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
+    SQLiteOpenHelper(context, "BDTAxiPark.db", null, 3) {
 
-class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFactory?) :
-    SQLiteOpenHelper(context,"DB",factory,1) {
+
     override fun onCreate(db: SQLiteDatabase?) {
         val createUsersTable = "CREATE TABLE users (id INTEGER PRIMARY KEY, login TEXT, password TEXT)"
-        val createDriversTable = "CREATE TABLE Drivers (\" +\n" +
-                "                \"DriverID INTEGER PRIMARY KEY AUTOINCREMENT,\" +\n" +
-                "                \"Name VARCHAR(100) NOT NULL,\" +\n" +
-                "                \"LicenseNumber VARCHAR(50) NOT NULL,\" +\n" +
-                "                \"PhoneNumber VARCHAR(15) NOT NULL,\" +\n" +
-                "                \"Rating DECIMAL(3, 2) CHECK(Rating >= 0 AND Rating <= 5)\" +\n" +
-                "                \")"
+
+
+
         db!!.execSQL(createUsersTable)
-        db!!.execSQL(createDriversTable)
+            //db.execSQL(createDriversTable)
     }
-    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS users")
+            //db.execSQL("DROP TABLE IF EXISTS Drivers")
         onCreate(db)
     }
 
-    fun onUpgrade1(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        db!!.execSQL("DROP TABLE IF EXISTS Drivers")
-        onCreate(db)
-    }
-
-    fun addUser(user: User){
+    fun addUser(user: User) {
         val values = ContentValues()
-        values.put("login",user.login)
-        values.put("password",user.password)
+        values.put("login", user.login)
+        values.put("password", user.password)
 
         val db = this.writableDatabase
-        db.insert("users",null,values)
+        db.insert("users", null, values)
         db.close()
-
     }
 
-    fun getUser(login:String,password:String):Boolean{
+    fun getUser(login: String, password: String): Boolean {
         val db = this.readableDatabase
-        val result = db.rawQuery(" SELECT * FROM users WHERE login = '$login' AND password = '$password' ",null)
-        return result.moveToFirst()
+        val result = db.rawQuery("SELECT * FROM users WHERE login = ? AND password = ?", arrayOf(login, password))
+        return result.moveToFirst().also { result.close() }
     }
 
     @SuppressLint("Range")
     fun getAllDrivers(): List<Driver> {
-        val driverList: MutableList<Driver> = ArrayList<Driver>()
+        val driverList: MutableList<Driver> = ArrayList()
         val db = this.readableDatabase
 
         val cursor = db.rawQuery("SELECT * FROM Drivers", null)
@@ -66,7 +59,7 @@ class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFact
                 val phoneNumber = cursor.getString(cursor.getColumnIndex("PhoneNumber"))
                 val rating = cursor.getDouble(cursor.getColumnIndex("Rating"))
 
-                val driver: Driver = Driver(id, name, licenseNumber, phoneNumber, rating)
+                val driver = Driver(id, name, licenseNumber, phoneNumber, rating)
                 driverList.add(driver)
             } while (cursor.moveToNext())
         }
@@ -74,7 +67,6 @@ class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFact
         cursor.close()
         return driverList
     }
-
 
     fun addOrder(order: Order) {
         val values = ContentValues()
@@ -111,8 +103,6 @@ class DatabaseHelper(val context: Context,val factory: SQLiteDatabase.CursorFact
         }
 
         cursor.close()
-        db.close()
-
         return ordersList
     }
 }
