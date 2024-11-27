@@ -19,12 +19,12 @@ class DatabaseHelper(val context: Context, val factory: SQLiteDatabase.CursorFac
 
 
         db!!.execSQL(createUsersTable)
-            //db.execSQL(createDriversTable)
+        //db.execSQL(createDriversTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS users")
-            //db.execSQL("DROP TABLE IF EXISTS Drivers")
+        //db.execSQL("DROP TABLE IF EXISTS Drivers")
         onCreate(db)
     }
 

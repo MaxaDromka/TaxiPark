@@ -1,25 +1,43 @@
 package com.example.taxipark
 
 import android.annotation.SuppressLint
+import android.database.Cursor
+import android.database.SQLException
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.widget.ListView
+import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.taxipark.DatabaseHelper.DatabaseHelper
+import com.example.taxipark.DatabaseHelper.DbHelepr2
+import java.io.IOException
 
 class DriverActivity : AppCompatActivity() {
 
-    private lateinit  var databaseHelper: DatabaseHelper
-    private lateinit var driverInfoTextView: TextView
+    private lateinit  var databaseHelper: DbHelepr2
+    private lateinit var driverInfoTextView: ListView
+    private lateinit var mDb: SQLiteDatabase
 
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drivers)
 
-        driverInfoTextView = findViewById(R.id.driver_info_text_view)
+        driverInfoTextView = findViewById(R.id.listView)
 
         // Initialize DatabaseHelper
-        databaseHelper = DatabaseHelper(this,null)
+        databaseHelper = DbHelepr2(this)
+        try {
+            databaseHelper.updateDataBase()
+        } catch (mIOException: IOException) {
+            throw Error("UnableToUpdateDatabase")
+        }
+
+        try {
+            mDb = databaseHelper.writableDatabase
+        } catch (mSQLException: SQLException) {
+            throw mSQLException
+        }
 
         // Fetch and display driver information
         displayDriverInfo()
@@ -27,30 +45,34 @@ class DriverActivity : AppCompatActivity() {
 
     @SuppressLint("Range")
     private fun displayDriverInfo() {
-        val db = databaseHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM Drivers", null)
+        //val db = databaseHelper.readableDatabase
+        val drivers = ArrayList<HashMap<String, Any>>()
+        val cursor = mDb.rawQuery("SELECT * FROM Drivers", null)
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    // Список параметров конкретного клиента
+                    val driver = HashMap<String, Any>()
 
-        if (cursor.moveToFirst()) {
-            val driverId = cursor.getInt(cursor.getColumnIndex("DriverID"))
-            val name = cursor.getString(cursor.getColumnIndex("Name"))
-            val licenseNumber = cursor.getString(cursor.getColumnIndex("LicenseNumber"))
-            val phoneNumber = cursor.getString(cursor.getColumnIndex("PhoneNumber"))
-            val rating = cursor.getDouble(cursor.getColumnIndex("Rating"))
+                    // Заполняем клиента
+                    driver["Name"] = it.getString(1)
+                    driver["LicenseNumber"] = it.getString(2)
+                    driver["PhoneNumber"] = it.getString(3)
+                    driver["Rating"] = it.getString(4)
 
-            // Format the driver information
-            val driverInfo = "Driver ID: $driverId\n" +
-                    "Name: $name\n" +
-                    "License Number: $licenseNumber\n" +
-                    "Phone Number: $phoneNumber\n" +
-                    "Rating: $rating"
-
-            // Display the information in TextView
-            driverInfoTextView.text = driverInfo
-        } else {
-            driverInfoTextView.text = "No driver information available."
+                    // Закидываем клиента в список клиентов
+                    drivers.add(driver)
+                } while (it.moveToNext())
+            }
         }
 
-        cursor.close()
-        db.close()
+        // Какие параметры клиента мы будем отображать в соответствующих элементах из разметки adapter_item.xml
+        val from = arrayOf("Name", "LicenseNumber","PhoneNumber","Rating")
+        val to = intArrayOf(R.id.textView,R.id.textView2,R.id.textView3,R.id.textView4)
+
+        // Создаем адаптер
+        val adapter = SimpleAdapter(this, drivers, R.layout.adapter_item, from, to)
+        val listView: ListView = findViewById(R.id.listView)
+        listView.adapter = adapter
     }
 }
