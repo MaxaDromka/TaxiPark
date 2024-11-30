@@ -65,13 +65,14 @@ class DriverActivity : AppCompatActivity() {
                 } while (it.moveToNext())
             }
         }
-
         // Какие параметры клиента мы будем отображать в соответствующих элементах из разметки adapter_item.xml
         val from = arrayOf("Name", "LicenseNumber","PhoneNumber","Rating")
         val to = intArrayOf(R.id.textView,R.id.textView2,R.id.textView3,R.id.textView4)
 
         // Создаем адаптер
         val adapter = SimpleAdapter(this, drivers, R.layout.adapter_item, from, to)
+        val headerView = layoutInflater.inflate(R.layout.header_item, null)
+        driverInfoTextView.addHeaderView(headerView)
         val listView: ListView = findViewById(R.id.listView)
         listView.adapter = adapter
     }
