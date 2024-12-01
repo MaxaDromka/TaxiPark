@@ -1,20 +1,20 @@
 package com.example.taxipark
 
-import Order
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class OrdersAdapter(private val ordersList: List<Order>) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
+class OrdersAdapter(private val orders: List<HashMap<String, Any>>) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
 
     class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val orderIdTextView: TextView = view.findViewById(R.id.orderIdTextView)
-        val pickupLocationTextView: TextView = view.findViewById(R.id.pickupLocationTextView)
-        val dropoffLocationTextView: TextView = view.findViewById(R.id.dropoffLocationTextView)
-        val driverNameTextView: TextView = view.findViewById(R.id.driverNameTextView)
-        val orderStatusTextView: TextView = view.findViewById(R.id.orderStatusTextView)
+        //val orderId: TextView = view.findViewById(R.id.orderIdTextView)
+        //val driverId: TextView = view.findViewById(R.id.driverIdTextView)
+        //val vehicleId: TextView = view.findViewById(R.id.vehicleIdTextView)
+       // val pickupLocation: TextView = view.findViewById(R.id.pickupLocationTextView)
+       // val dropoffLocation: TextView = view.findViewById(R.id.dropoffLocationTextView)
+       // val status: TextView = view.findViewById(R.id.statusTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
@@ -23,25 +23,16 @@ class OrdersAdapter(private val ordersList: List<Order>) : RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
-        val order = ordersList[position]
-
-        holder.orderIdTextView.text = "Заказ ID: ${order.orderID}"
-        holder.pickupLocationTextView.text = "Место подачи: ${order.pickupLocation}"
-        holder.dropoffLocationTextView.text = "Место назначения: ${order.dropoffLocation}"
-
-        // Предполагается, что у вас есть метод для получения имени водителя по его ID
-        holder.driverNameTextView.text = "Водитель: ${getDriverName(order.driverID)}"
-
-        holder.orderStatusTextView.text = "Статус: ${order.status}"
+        val order = orders[position]
+       // holder.orderId.text = order["OrderID"] as String
+       // holder.driverId.text = order["DriverID"] as String
+       // holder.vehicleId.text = order["VehicleID"] as String
+       // holder.pickupLocation.text = order["PickupLocation"] as String
+       // holder.dropoffLocation.text = order["DropoffLocation"] as String
+       // holder.status.text = order["Status"] as String
     }
 
     override fun getItemCount(): Int {
-        return ordersList.size
-    }
-
-    private fun getDriverName(driverID: Int): String {
-        // Реализуйте логику получения имени водителя по его ID
-        // Это может быть обращение к базе данных или к локальному списку водителей
-        return "Имя Водителя" // Заглушка
+        return orders.size
     }
 }
