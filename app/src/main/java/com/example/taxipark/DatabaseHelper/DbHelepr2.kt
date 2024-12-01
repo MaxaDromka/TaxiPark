@@ -24,7 +24,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
     companion object {
         private const val DB_NAME = "BDTAxiPark.db"
-        private const val DB_VERSION = 4
+        private const val DB_VERSION = 5
     }
 
     init {

@@ -1,32 +1,71 @@
 package com.example.taxipark
 
 import Order
+import android.database.SQLException
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.widget.ListView
+import android.widget.SimpleAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import com.example.taxipark.DatabaseHelper.DbHelepr2
+import java.io.IOException
 class OrdersActivity : AppCompatActivity() {
 
-    private lateinit var ordersRecyclerView: RecyclerView
-    private lateinit var ordersAdapter: OrdersAdapter
+    private lateinit var databaseHelper: DbHelepr2
+    private lateinit var mDb: SQLiteDatabase
+    private lateinit var listView: ListView // Declare ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_orders)
+        setContentView(R.layout.item_order) // Ensure this is the correct layout for displaying orders
 
-        ordersRecyclerView = findViewById(R.id.ordersRecyclerView)
+        listView = findViewById(R.id.listView) // Initialize ListView
 
-        // Пример списка заказов (замените это на реальные данные из базы данных)
-        val ordersList = listOf(
-            Order(1, 1, 1, "Ул. Ленина, д.1", "Ул. Пушкина, д.2", "Выполнен"),
-            Order(2, 2, 2, "Ул. Чехова, д.3", "Ул. Гоголя, д.4", "Отменен"),
-            Order(3, 3, 3, "Ул. Толстого, д.5", "Ул. Достоевского, д.6", "Выполнен"),
-            Order(4, 4, 4, "Ул. Московская, д.8", "Ул. Достоевского, д.6", "Выполнен")
-        )
+        databaseHelper = DbHelepr2(this)
+        try {
+            databaseHelper.updateDataBase()
+            mDb = databaseHelper.writableDatabase
+            displayOrderInfo() // Call method to display orders
+        } catch (e: IOException) {
+            throw Error("UnableToUpdateDatabase")
+        } catch (e: SQLException) {
+            throw e
+        }
+    }
 
-        ordersAdapter = OrdersAdapter(ordersList)
-        ordersRecyclerView.layoutManager = LinearLayoutManager(this)
-        ordersRecyclerView.adapter = ordersAdapter
+    private fun displayOrderInfo() {
+        val orders = ArrayList<HashMap<String, Any>>()
+
+        val cursor = mDb.rawQuery("SELECT * FROM Orders", null)
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    val driver = HashMap<String, Any>()
+                    driver["OrderID"] = it.getString(1)
+                    driver["DriverID"] = it.getString(2)
+                    driver["VehicleID"] = it.getString(3)
+                    driver["PickupLocation"] = it.getString(4)
+                    driver["DropoffLocation"] = it.getString(5)
+                    // If Status is needed, uncomment and adjust accordingly
+                    // driver["Status"] = it.getString(6)
+                    orders.add(driver)
+                } while (it.moveToNext())
+            }
+        }
+
+        val from = arrayOf("OrderID", "DriverID", "VehicleID", "PickupLocation", "DropoffLocation")
+        val to = intArrayOf(R.id.textView, R.id.textView2, R.id.textView3, R.id.textView4, R.id.textView5)
+
+        // Set up SimpleAdapter
+        val adapter = SimpleAdapter(this, orders, R.layout.adapteritemorders, from, to)
+
+        // Set adapter to ListView
+        listView.adapter = adapter
+
+        // Optional header view setup if needed
+        // val headerView = layoutInflater.inflate(R.layout.header_item, null)
+        // listView.addHeaderView(headerView)
     }
 }
