@@ -1,9 +1,12 @@
 package com.example.taxipark
 
 import Order
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +26,13 @@ class OrdersActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.listView) // Initialize ListView
 
+
+        val createOrderButton = findViewById<Button>(R.id.createOrder)
+        createOrderButton.setOnClickListener {
+            val intent = Intent(this, CreateOrderActivity::class.java)
+            startActivity(intent)
+        }
+
         databaseHelper = DbHelepr2(this)
         try {
             databaseHelper.updateDataBase()
@@ -35,22 +45,26 @@ class OrdersActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("Range")
     private fun displayOrderInfo() {
         val orders = ArrayList<HashMap<String, Any>>()
 
+        // Execute the query
         val cursor = mDb.rawQuery("SELECT * FROM Orders", null)
+
+        // Check if cursor is not null and has data
         cursor.use {
-            if (it.moveToFirst()) {
+            if (it != null && it.moveToFirst()) {
                 do {
-                    val driver = HashMap<String, Any>()
-                    driver["OrderID"] = it.getString(1)
-                    driver["DriverID"] = it.getString(2)
-                    driver["VehicleID"] = it.getString(3)
-                    driver["PickupLocation"] = it.getString(4)
-                    driver["DropoffLocation"] = it.getString(5)
+                    val order = HashMap<String, Any>()
+                    order["OrderID"] = it.getString(it.getColumnIndex("OrderID")) ?: "N/A"
+                    order["DriverID"] = it.getString(it.getColumnIndex("DriverID")) ?: "N/A"
+                    order["VehicleID"] = it.getString(it.getColumnIndex("VehicleID")) ?: "N/A"
+                    order["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation")) ?: "N/A"
+                    order["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation")) ?: "N/A"
                     // If Status is needed, uncomment and adjust accordingly
-                    // driver["Status"] = it.getString(6)
-                    orders.add(driver)
+                    // order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"
+                    orders.add(order)
                 } while (it.moveToNext())
             }
         }
