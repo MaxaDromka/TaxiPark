@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/createOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Создать заказ"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"/>
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

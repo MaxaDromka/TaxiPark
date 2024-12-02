@@ -49,7 +49,7 @@ class MainActivity2 : AppCompatActivity() {
                     driver["DriverID"] = it.getString(1)
                     driver["Model"] = it.getString(2)
                     driver["LicwnswPlate"] = it.getString(3)
-                    driver["Status"] = it.getString(4)
+                    //driver["Status"] = it.getString(4)
                     // If Status is needed, uncomment and adjust accordingly
                     // driver["Status"] = it.getString(6)
                     orders.add(driver)
@@ -57,8 +57,8 @@ class MainActivity2 : AppCompatActivity() {
             }
         }
 
-        val from = arrayOf("DriverID", "Model", "LicwnswPlate", "Status")
-        val to = intArrayOf(R.id.textViewAuto1, R.id.textViewAuto2, R.id.textViewAuto3, R.id.textView4)
+        val from = arrayOf("DriverID", "Model", "LicwnswPlate")
+        val to = intArrayOf(R.id.textViewAuto1, R.id.textViewAuto2, R.id.textViewAuto3)
 
         // Set up SimpleAdapter
         val adapter = SimpleAdapter(this, orders, R.layout.adapter_item_autos, from, to)
