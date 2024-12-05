@@ -8,12 +8,11 @@
         android:id="@+id/createOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Создать заказ"
-        android:layout_alignParentTop="true"
-        android:layout_margin="16dp"/>
+        android:text="Create Order" />
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false" />
 </LinearLayout>

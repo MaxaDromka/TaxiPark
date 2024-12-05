@@ -18,14 +18,13 @@ class OrdersActivity : AppCompatActivity() {
 
     private lateinit var databaseHelper: DbHelepr2
     private lateinit var mDb: SQLiteDatabase
-    private lateinit var listView: ListView // Declare ListView
+    private lateinit var recyclerView: RecyclerView // Change ListView to RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.item_order) // Ensure this is the correct layout for displaying orders
 
-        listView = findViewById(R.id.listView) // Initialize ListView
-
+        recyclerView = findViewById(R.id.recycler_view) // Initialize RecyclerView
 
         val createOrderButton = findViewById<Button>(R.id.createOrder)
         createOrderButton.setOnClickListener {
@@ -34,6 +33,7 @@ class OrdersActivity : AppCompatActivity() {
         }
 
         databaseHelper = DbHelepr2(this)
+
         try {
             databaseHelper.updateDataBase()
             mDb = databaseHelper.writableDatabase
@@ -49,37 +49,29 @@ class OrdersActivity : AppCompatActivity() {
     private fun displayOrderInfo() {
         val orders = ArrayList<HashMap<String, Any>>()
 
-        // Execute the query
-        val cursor = mDb.rawQuery("SELECT * FROM Orders", null)
+        // Execute the query with a JOIN to get Driver Name
+        val cursor = mDb.rawQuery("""SELECT Orders.OrderID, Drivers.Name AS DriverName, Orders.VehicleID,Orders.PickupLocation, Orders.DropoffLocation, Orders.Status FROM Orders JOIN Drivers ON Orders.DriverID = Drivers.DriverID """, null)
 
-        // Check if cursor is not null and has data
         cursor.use {
-            if (it != null && it.moveToFirst()) {
+            if (it.moveToFirst()) {
                 do {
                     val order = HashMap<String, Any>()
                     order["OrderID"] = it.getString(it.getColumnIndex("OrderID")) ?: "N/A"
-                    order["DriverID"] = it.getString(it.getColumnIndex("DriverID")) ?: "N/A"
+                    order["DriverName"] = it.getString(it.getColumnIndex("DriverName")) ?: "N/A" // Get Driver Name
                     order["VehicleID"] = it.getString(it.getColumnIndex("VehicleID")) ?: "N/A"
                     order["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation")) ?: "N/A"
                     order["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation")) ?: "N/A"
-                    // If Status is needed, uncomment and adjust accordingly
-                    // order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"
+                    order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"
                     orders.add(order)
                 } while (it.moveToNext())
             }
         }
 
-        val from = arrayOf("OrderID", "DriverID", "VehicleID", "PickupLocation", "DropoffLocation")
-        val to = intArrayOf(R.id.textView, R.id.textView2, R.id.textView3, R.id.textView4, R.id.textView5)
+        // Set up RecyclerAdapter instead of SimpleAdapter
+        val adapter = OrdersAdapter(this, orders)
 
-        // Set up SimpleAdapter
-        val adapter = SimpleAdapter(this, orders, R.layout.adapteritemorders, from, to)
-
-        // Set adapter to ListView
-        listView.adapter = adapter
-
-        // Optional header view setup if needed
-        // val headerView = layoutInflater.inflate(R.layout.header_item, null)
-        // listView.addHeaderView(headerView)
+        // Set up Recycler View
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
     }
 }
