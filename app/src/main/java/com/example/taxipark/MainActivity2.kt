@@ -37,6 +37,7 @@ class MainActivity2 : AppCompatActivity() {
         } catch (e: SQLException) {
             throw e
         }
+
     }
     private fun displayOrderInfo() {
         val orders = ArrayList<HashMap<String, Any>>()
@@ -46,28 +47,16 @@ class MainActivity2 : AppCompatActivity() {
             if (it.moveToFirst()) {
                 do {
                     val driver = HashMap<String, Any>()
-                    driver["DriverID"] = it.getString(1)
                     driver["Model"] = it.getString(2)
                     driver["LicwnswPlate"] = it.getString(3)
-                    //driver["Status"] = it.getString(4)
-                    // If Status is needed, uncomment and adjust accordingly
-                    // driver["Status"] = it.getString(6)
                     orders.add(driver)
                 } while (it.moveToNext())
             }
         }
 
-        val from = arrayOf("DriverID", "Model", "LicwnswPlate")
-        val to = intArrayOf(R.id.textViewAuto1, R.id.textViewAuto2, R.id.textViewAuto3)
-
-        // Set up SimpleAdapter
-        val adapter = SimpleAdapter(this, orders, R.layout.adapter_item_autos, from, to)
-
-        // Set adapter to ListView
+        // Use the custom adapter
+        val adapter = VehicleAdapter(this, orders)
         listView.adapter = adapter
-
-        // Optional header view setup if needed
-        // val headerView = layoutInflater.inflate(R.layout.header_item, null)
-        // listView.addHeaderView(headerView)
     }
+
 }

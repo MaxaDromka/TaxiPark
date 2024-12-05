@@ -1,35 +1,36 @@
 package com.example.taxipark
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
-class OrdersAdapter(private val orders: List<HashMap<String, Any>>) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
+class OrdersAdapter(private val context: Context, private val orders: List<HashMap<String, Any>>) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
 
     class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //val orderId: TextView = view.findViewById(R.id.orderIdTextView)
-        //val driverId: TextView = view.findViewById(R.id.driverIdTextView)
-        //val vehicleId: TextView = view.findViewById(R.id.vehicleIdTextView)
-       // val pickupLocation: TextView = view.findViewById(R.id.pickupLocationTextView)
-       // val dropoffLocation: TextView = view.findViewById(R.id.dropoffLocationTextView)
-       // val status: TextView = view.findViewById(R.id.statusTextView)
+        val orderIdTextView: TextView = view.findViewById(R.id.orderIdTextView)
+        val driverNameTextView: TextView = view.findViewById(R.id.driverNameTextView) // Updated ID for Driver Name
+        val vehicleIdTextView: TextView = view.findViewById(R.id.vehicleIdTextView)
+        val pickupLocationTextView: TextView = view.findViewById(R.id.pickupLocationTextView)
+        val dropoffLocationTextView: TextView = view.findViewById(R.id.dropoffLocationTextView)
+        val statusTextView: TextView = view.findViewById(R.id.statusTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_order, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.adapteritemorders, parent, false)
         return OrderViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
-       // holder.orderId.text = order["OrderID"] as String
-       // holder.driverId.text = order["DriverID"] as String
-       // holder.vehicleId.text = order["VehicleID"] as String
-       // holder.pickupLocation.text = order["PickupLocation"] as String
-       // holder.dropoffLocation.text = order["DropoffLocation"] as String
-       // holder.status.text = order["Status"] as String
+
+        holder.orderIdTextView.text = "Идентификатор заказа: ${order["OrderID"]}"
+        holder.driverNameTextView.text = "Водитель: ${order["DriverName"]}" // Display Driver Name
+        holder.vehicleIdTextView.text = "Идентификатор автомобиля: ${order["VehicleID"]}"
+        holder.pickupLocationTextView.text = "Место забора: ${order["PickupLocation"]}"
+        holder.dropoffLocationTextView.text = "Место высадки: ${order["DropoffLocation"]}"
+        holder.statusTextView.text = "Статус заказа: ${order["Status"]}"
     }
 
     override fun getItemCount(): Int {
