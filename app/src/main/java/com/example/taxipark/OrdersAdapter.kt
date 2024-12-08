@@ -11,10 +11,10 @@ class OrdersAdapter(private val context: Context, private val orders: List<HashM
     class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val orderIdTextView: TextView = view.findViewById(R.id.orderIdTextView)
         val driverNameTextView: TextView = view.findViewById(R.id.driverNameTextView) // Updated ID for Driver Name
-        val vehicleIdTextView: TextView = view.findViewById(R.id.vehicleIdTextView)
         val pickupLocationTextView: TextView = view.findViewById(R.id.pickupLocationTextView)
         val dropoffLocationTextView: TextView = view.findViewById(R.id.dropoffLocationTextView)
         val statusTextView: TextView = view.findViewById(R.id.statusTextView)
+        //val autoTextView: TextView = view.findViewById(R.id.numberauto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
@@ -25,9 +25,8 @@ class OrdersAdapter(private val context: Context, private val orders: List<HashM
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
 
-        holder.orderIdTextView.text = "Идентификатор заказа: ${order["OrderID"]}"
-        holder.driverNameTextView.text = "Водитель: ${order["DriverName"]}" // Display Driver Name
-        holder.vehicleIdTextView.text = "Идентификатор автомобиля: ${order["VehicleID"]}"
+        //holder.orderIdTextView.text = "Идентификатор заказа: ${order["OrderID"]}"
+        holder.driverNameTextView.text = "Водитель: ${order["DriverName"]}"
         holder.pickupLocationTextView.text = "Место забора: ${order["PickupLocation"]}"
         holder.dropoffLocationTextView.text = "Место высадки: ${order["DropoffLocation"]}"
         holder.statusTextView.text = "Статус заказа: ${order["Status"]}"

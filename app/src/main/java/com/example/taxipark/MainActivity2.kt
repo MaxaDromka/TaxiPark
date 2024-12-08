@@ -1,5 +1,6 @@
 package com.example.taxipark
 
+import android.annotation.SuppressLint
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
@@ -39,17 +40,20 @@ class MainActivity2 : AppCompatActivity() {
         }
 
     }
+    @SuppressLint("Range")
     private fun displayOrderInfo() {
         val orders = ArrayList<HashMap<String, Any>>()
 
+        // Adjust the query if needed to include specific columns
         val cursor = mDb.rawQuery("SELECT * FROM Vehicles", null)
         cursor.use {
             if (it.moveToFirst()) {
                 do {
-                    val driver = HashMap<String, Any>()
-                    driver["Model"] = it.getString(2)
-                    driver["LicwnswPlate"] = it.getString(3)
-                    orders.add(driver)
+                    val vehicle = HashMap<String, Any>()
+                    vehicle["Model"] = it.getString(it.getColumnIndex("Model")) ?: "N/A"
+                    vehicle["LicensePlate"] = it.getString(it.getColumnIndex("LicensePlate")) ?: "N/A"
+                    vehicle["StatusAuto"] = it.getString(it.getColumnIndex("StatusAuto")) ?: "N/A" // Ensure this is correct
+                    orders.add(vehicle)
                 } while (it.moveToNext())
             }
         }
