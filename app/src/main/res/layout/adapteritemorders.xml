@@ -17,12 +17,6 @@
     android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/vehicleIdTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp" />
-
-    <TextView
         android:id="@+id/pickupLocationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,9 +28,16 @@
         android:layout_height="wrap_content"
         android:textSize="16sp" />
 
+
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/numberauto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
+
 </LinearLayout>

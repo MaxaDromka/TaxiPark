@@ -2,8 +2,8 @@ package com.example.taxipark
 
 class Vehicle(
     val vehicleID: Int,
-    val model: String,
-    val licensePlate: String,
-    val status: String,
-    val photo: ByteArray
+    val DriverID: Int,
+    val Model: String,
+    val LicensePlate: String,
+    val StatusAuto: String,
 )

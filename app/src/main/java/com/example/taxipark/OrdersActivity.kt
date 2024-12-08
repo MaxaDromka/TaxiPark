@@ -58,7 +58,7 @@ class OrdersActivity : AppCompatActivity() {
                     val order = HashMap<String, Any>()
                     order["OrderID"] = it.getString(it.getColumnIndex("OrderID")) ?: "N/A"
                     order["DriverName"] = it.getString(it.getColumnIndex("DriverName")) ?: "N/A" // Get Driver Name
-                    order["VehicleID"] = it.getString(it.getColumnIndex("VehicleID")) ?: "N/A"
+                    //order["VehicleID"] = it.getString(it.getColumnIndex("VehicleID")) ?: "N/A"
                     order["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation")) ?: "N/A"
                     order["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation")) ?: "N/A"
                     order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"

@@ -21,10 +21,12 @@ class VehicleAdapter(context: Context, private val vehicles: List<HashMap<String
 
         val modelTextView = view.findViewById<TextView>(R.id.textViewAuto2)
         val licensePlateTextView = view.findViewById<TextView>(R.id.textViewAuto3)
+        val statusPlateTextView = view.findViewById<TextView>(R.id.textViewAuto4)
 
         val vehicle = vehicles[position]
-        modelTextView.text = vehicle["Model"] as String
-        licensePlateTextView.text = vehicle["LicwnswPlate"] as String
+        modelTextView.text = "Модель: ${vehicle["Model"] as String}" // Uncomment and use this line
+        licensePlateTextView.text = "Номерной знак: ${vehicle["LicensePlate"] as String}"
+        statusPlateTextView.text = "Статус: ${vehicle["StatusAuto"] as String}" // Update this line accordingly
 
 
         return view
