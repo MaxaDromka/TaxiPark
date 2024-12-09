@@ -5,31 +5,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/pickupLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="Pickup Location"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/dropoffLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/username"
+        android:hint="Dropoff Location"
+        app:layout_constraintTop_toBottomOf="@id/pickupLocation"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="16dp" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/submitBookingButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Login"
-        app:layout_constraintTop_toBottomOf="@id/password"
+        android:text="Submit Booking"
+        app:layout_constraintTop_toBottomOf="@id/dropoffLocation"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.taxipark.DatabaseHelper
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -24,7 +25,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
     companion object {
         private const val DB_NAME = "BDTAxiPark.db"
-        private const val DB_VERSION = 7
+        private const val DB_VERSION = 8
     }
 
     init {
@@ -93,5 +94,59 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
             mNeedUpdate = true
         }
     }
+
+    fun getUserByUsernameAndPassword(username: String, password: String): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM Users WHERE Username = ? AND Password = ?", arrayOf(username, password))
+
+        return cursor.count > 0
+    }
+
+    fun getUserBookings(userId: Int): List<String> {
+        val bookings = mutableListOf<String>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT b.BookingID, b.BookingDate, b.PickupLocation, b.DropoffLocation, b.Status " +
+                    "FROM Bookings b " +
+                    "JOIN Orders o ON b.OrderID = o.OrderID " +
+                    "JOIN Users u ON o.UserID = u.UserID " +
+                    "WHERE u.UserID = ?",
+            arrayOf(userId.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            val bookingDetails = "${cursor.getString(1)}: ${cursor.getString(2)} -> ${cursor.getString(3)} | ${cursor.getString(4)} | User: ${cursor.getString(5)}"
+            bookings.add(bookingDetails)
+        }
+        cursor.close()
+        return bookings
+    }
+
+
+    fun createBooking(orderId: Int, pickupLocation: String, dropoffLocation: String, status: String, userId: Int): Long {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("OrderID", orderId)
+            put("BookingDate", System.currentTimeMillis())
+            put("PickupLocation", pickupLocation)
+            put("DropoffLocation", dropoffLocation)
+            put("Status", status)
+        }
+        return db.insert("Bookings", null, contentValues)
+    }
+
+    fun getUserIdByUsername(username: String): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT UserID FROM Users WHERE Username = ?", arrayOf(username))
+        var userId = -1
+        if (cursor.moveToFirst()) {
+            userId = cursor.getInt(0)
+        }
+        cursor.close()
+        return userId
+    }
+
+
+
 
 }

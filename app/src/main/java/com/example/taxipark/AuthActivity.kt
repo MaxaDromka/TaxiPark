@@ -1,51 +1,46 @@
 package com.example.taxipark
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.taxipark.DatabaseHelper.DatabaseHelper
+import com.example.taxipark.DatabaseHelper.DbHelepr2
 
 class AuthActivity : AppCompatActivity() {
+
+    private lateinit var dbHelper: DbHelepr2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
-        val userLogin: EditText = findViewById(R.id.user_login_auth)
-        val userPassword: EditText = findViewById(R.id.user_password_auth)
-        val button: Button = findViewById(R.id.button)
-        val linkToReg:TextView = findViewById(R.id.link_to_reg)
 
-        linkToReg.setOnClickListener{
-            val intent = Intent(this,RegistrationActivity::class.java)
-            startActivity(intent)
-        }
+        dbHelper = DbHelepr2(this)
 
-        button.setOnClickListener{
-            val login = userLogin.text.toString().trim()
-            val password = userPassword.text.toString().trim()
+        val username = findViewById<EditText>(R.id.username)
+        val password = findViewById<EditText>(R.id.password)
+        val loginButton = findViewById<Button>(R.id.loginButton)
 
-            if(login == "" || password == "")
-                Toast.makeText(this,"Не все поля заполнены", Toast.LENGTH_LONG).show()
-            else{
+        loginButton.setOnClickListener {
+            val userNameText = username.text.toString()
+            val passwordText = password.text.toString()
 
-                val db = DatabaseHelper(this,null)
-                val isAuth = db.getUser(login,password)
+            if (userNameText.isNotEmpty() && passwordText.isNotEmpty()) {
+                val isValidUser = dbHelper.getUserByUsernameAndPassword(userNameText, passwordText)
 
-                if(isAuth){
-                Toast.makeText(this,"Пользователь $login авторизован", Toast.LENGTH_LONG).show()
-                userLogin.text.clear()
-                userPassword.text.clear()
+                if (isValidUser) {
+                    val userId = dbHelper.getUserIdByUsername(userNameText)
+                    val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
+                    sharedPreferences.edit().putInt("LoggedInUserId", userId).apply()
+
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    finish() // Переход к основному экрану
+                } else {
+                    Toast.makeText(this, "Invalid Username or Password", Toast.LENGTH_SHORT).show()
                 }
-                else{
-                    Toast.makeText(this,"Пользователь $login не авторизован", Toast.LENGTH_LONG).show()
-                }
+            } else {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
     }
