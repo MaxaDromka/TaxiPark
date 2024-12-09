@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.taxipark.DatabaseHelper.DbHelepr2
 
@@ -79,14 +80,28 @@ class CreateOrderActivity : AppCompatActivity() {
     }
 
     private fun saveOrder(driverID: Int, pickupLocation: String, dropoffLocation: String) {
-        val values = ContentValues().apply {
-            put("PickupLocation", pickupLocation)
-            put("DropoffLocation", dropoffLocation)
-            put("DriverID", driverID) // Store the selected driver's ID
-            put("Status", "В ожидании") // Default status, adjust as needed
-            // You may need to add UserID if required
-        }
+        // Получение текущего UserID из SharedPreferences
+        val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getInt("LoggedInUserId", -1)
 
-        mDb.insert("Orders", null, values)
+        if (userId != -1) {
+            // Сохранение заказа в базу данных
+            val values = ContentValues().apply {
+                put("PickupLocation", pickupLocation)
+                put("DropoffLocation", dropoffLocation)
+                put("DriverID", driverID) // ID выбранного водителя
+                put("UserID", userId) // ID авторизованного пользователя
+                put("Status", "В ожидании") // Статус заказа
+            }
+
+            mDb.insert("Orders", null, values)
+
+            // Уведомление пользователя об успешном создании заказа
+            Toast.makeText(this, "Order Created Successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            // Если пользователь не авторизован
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+        }
     }
+
 }

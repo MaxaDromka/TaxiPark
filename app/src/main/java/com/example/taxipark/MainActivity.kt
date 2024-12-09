@@ -58,6 +58,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity,AuthActivity::class.java)
             startActivity(intent)
         }
+        val bookingsButton = findViewById<Button>(R.id.bookingsButton)
+        bookingsButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, BookingsActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
     }

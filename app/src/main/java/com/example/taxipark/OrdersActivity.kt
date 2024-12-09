@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import android.widget.SimpleAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,31 +48,40 @@ class OrdersActivity : AppCompatActivity() {
 
     @SuppressLint("Range")
     private fun displayOrderInfo() {
-        val orders = ArrayList<HashMap<String, Any>>()
+        val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getInt("LoggedInUserId", -1)
 
-        // Execute the query with a JOIN to get Driver Name
-        val cursor = mDb.rawQuery("""SELECT Orders.OrderID, Drivers.Name AS DriverName, Orders.VehicleID,Orders.PickupLocation, Orders.DropoffLocation, Orders.Status FROM Orders JOIN Drivers ON Orders.DriverID = Drivers.DriverID """, null)
+        if (userId != -1) {
+            val orders = ArrayList<HashMap<String, Any>>()
+            val cursor = mDb.rawQuery(
+                """SELECT Orders.OrderID, Drivers.Name AS DriverName, Orders.PickupLocation, Orders.DropoffLocation, Orders.Status
+               FROM Orders
+               LEFT JOIN Drivers ON Orders.DriverID = Drivers.DriverID
+               WHERE Orders.UserID = ?""",
+                arrayOf(userId.toString())
+            )
 
-        cursor.use {
-            if (it.moveToFirst()) {
-                do {
-                    val order = HashMap<String, Any>()
-                    order["OrderID"] = it.getString(it.getColumnIndex("OrderID")) ?: "N/A"
-                    order["DriverName"] = it.getString(it.getColumnIndex("DriverName")) ?: "N/A" // Get Driver Name
-                    //order["VehicleID"] = it.getString(it.getColumnIndex("VehicleID")) ?: "N/A"
-                    order["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation")) ?: "N/A"
-                    order["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation")) ?: "N/A"
-                    order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"
-                    orders.add(order)
-                } while (it.moveToNext())
+            cursor.use {
+                if (it.moveToFirst()) {
+                    do {
+                        val order = HashMap<String, Any>()
+                        order["OrderID"] = it.getString(it.getColumnIndex("OrderID")) ?: "N/A"
+                        order["DriverName"] = it.getString(it.getColumnIndex("DriverName")) ?: "N/A"
+                        order["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation")) ?: "N/A"
+                        order["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation")) ?: "N/A"
+                        order["Status"] = it.getString(it.getColumnIndex("Status")) ?: "N/A"
+                        orders.add(order)
+                    } while (it.moveToNext())
+                }
             }
+
+            // Используем RecyclerView
+            val adapter = OrdersAdapter(this, orders)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapter
+        } else {
+            Toast.makeText(this, "No logged in user", Toast.LENGTH_SHORT).show()
         }
-
-        // Set up RecyclerAdapter instead of SimpleAdapter
-        val adapter = OrdersAdapter(this, orders)
-
-        // Set up Recycler View
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
     }
+
 }
