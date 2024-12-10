@@ -18,6 +18,7 @@ class CreateOrderActivity : AppCompatActivity() {
     private lateinit var databaseHelper: DbHelepr2
     private lateinit var mDb: SQLiteDatabase
     private lateinit var driverSpinner: Spinner
+    private val driverIdMap = HashMap<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,43 +39,49 @@ class CreateOrderActivity : AppCompatActivity() {
         saveOrderButton.setOnClickListener {
             val pickupLocation = pickupLocationEditText.text.toString()
             val dropoffLocation = dropoffLocationEditText.text.toString()
-            val selectedDriver = driverSpinner.selectedItem as Driver // Cast selected item to Driver
+
+            // Получаем выбранное имя водителя из Spinner
+            val selectedDriverName = driverSpinner.selectedItem as String
 
             if (pickupLocation.isNotEmpty() && dropoffLocation.isNotEmpty()) {
-                saveOrder(selectedDriver.driverID, pickupLocation, dropoffLocation)
+                // Получаем ID выбранного водителя из мапы
+                val selectedDriverId = driverIdMap[selectedDriverName] ?: -1
 
-                // Start OrdersActivity and finish this activity
-                val intent = Intent(this, OrdersActivity::class.java)
-                startActivity(intent)
-                finish() // Close this activity
+                if (selectedDriverId != -1) {
+                    saveOrder(selectedDriverId, pickupLocation, dropoffLocation)
+
+                    // Переход к OrdersActivity и завершение текущей активности
+                    val intent = Intent(this, OrdersActivity::class.java)
+                    startActivity(intent)
+                    finish() // Закрываем текущую активность
+                } else {
+                    Toast.makeText(this, "Ошибка при выборе водителя", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                // Optionally show an error message
+                Toast.makeText(this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     @SuppressLint("Range")
     private fun loadDrivers() {
-        val drivers = ArrayList<Driver>() // Use Driver objects instead of HashMap
-        val cursor = mDb.rawQuery("SELECT DriverID, Name, LicenseNumber, PhoneNumber, Rating FROM Drivers", null)
+        val driverNames = ArrayList<String>() // Список для имен водителей
+        val cursor = mDb.rawQuery("SELECT DriverID, Name FROM Drivers", null)
 
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val driverID = it.getInt(it.getColumnIndex("DriverID"))
                     val name = it.getString(it.getColumnIndex("Name"))
-                    val licenseNumber = it.getString(it.getColumnIndex("LicenseNumber"))
-                    val phoneNumber = it.getString(it.getColumnIndex("PhoneNumber"))
-                    val rating = it.getDouble(it.getColumnIndex("Rating"))
 
-                    // Create Driver object and add to list
-                    drivers.add(Driver(driverID, name, licenseNumber, phoneNumber, rating))
+                    driverNames.add(name) // Добавляем только имя водителя
+                    driverIdMap[name] = driverID // Сохраняем соответствие имя -> ID
                 } while (it.moveToNext())
             }
         }
 
-        // Set up ArrayAdapter for Spinner using Driver objects
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, drivers)
+        // Установите адаптер для Spinner с именами водителей
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, driverNames)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         driverSpinner.adapter = adapter
     }
