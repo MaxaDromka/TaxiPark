@@ -64,6 +64,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val profileButton = findViewById<Button>(R.id.profileButton)
+        profileButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
     }

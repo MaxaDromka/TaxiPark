@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/landing_logo"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="160dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,90 +22,105 @@
         android:id="@+id/driversButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Водители"
-        app:layout_constraintTop_toBottomOf="@id/logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:backgroundTint="@android:color/holo_blue_light"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button_background"
         android:elevation="4dp"
+        android:text="Водители"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo" />
 
     <Button
         android:id="@+id/carsButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Автомобили"
-        app:layout_constraintTop_toBottomOf="@id/driversButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:backgroundTint="@android:color/holo_green_light"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button_background"
         android:elevation="4dp"
+        android:text="Автомобили"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/driversButton" />
 
     <Button
         android:id="@+id/ordersButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Мои заказы"
-        app:layout_constraintTop_toBottomOf="@id/carsButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:backgroundTint="@android:color/holo_orange_light"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button_background"
         android:elevation="4dp"
+        android:text="Мои заказы"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/carsButton" />
 
     <Button
         android:id="@+id/bookingsButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button_background"
+        android:elevation="4dp"
         android:text="Бронирования"
-        app:layout_constraintTop_toBottomOf="@id/ordersButton"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:elevation="4dp"/>
+        app:layout_constraintTop_toBottomOf="@id/ordersButton" />
 
     <Button
-        android:id="@+id/statusAuto"
+        android:id="@+id/profileButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Статус Авто"
-        app:layout_constraintTop_toBottomOf="@id/bookingsButton"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_button_background"
+        android:elevation="4dp"
+        android:text="Мой профиль"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bookingsButton" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="84dp"
+        android:background="@drawable/rounded_button_background"
         android:elevation="4dp"
         android:text="Регистрация"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusAuto" />
+        app:layout_constraintTop_toBottomOf="@id/bookingsButton" />
 
     <Button
         android:id="@+id/authButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button_background"
         android:elevation="4dp"
         android:text="Авторизация"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusAuto" />
-
+        app:layout_constraintTop_toBottomOf="@id/loginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
