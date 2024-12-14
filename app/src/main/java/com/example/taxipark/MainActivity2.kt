@@ -63,4 +63,6 @@ class MainActivity2 : AppCompatActivity() {
         listView.adapter = adapter
     }
 
+    
+
 }

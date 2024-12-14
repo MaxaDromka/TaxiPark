@@ -1,5 +1,6 @@
 package com.example.taxipark.DatabaseHelper
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -25,7 +26,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
     companion object {
         private const val DB_NAME = "BDTAxiPark.db"
-        private const val DB_VERSION = 8
+        private const val DB_VERSION = 10
     }
 
     init {
@@ -86,7 +87,6 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Здесь можно создать таблицы, если это необходимо
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -102,25 +102,33 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
         return cursor.count > 0
     }
 
+   /* @SuppressLint("Range")
     fun getUserBookings(userId: Int): List<String> {
-        val bookings = mutableListOf<String>()
-        val db = readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT b.BookingID, b.BookingDate, b.PickupLocation, b.DropoffLocation, b.Status " +
-                    "FROM Bookings b " +
-                    "JOIN Orders o ON b.OrderID = o.OrderID " +
-                    "JOIN Users u ON o.UserID = u.UserID " +
-                    "WHERE u.UserID = ?",
-            arrayOf(userId.toString())
-        )
+        val bookingsList = mutableListOf<String>()
+        val db = this.readableDatabase
+        val query = """
+        SELECT BookingID, PickupLocation, DropoffLocation, BookingDate, Status 
+        FROM Bookings 
+        INNER JOIN Orders ON Bookings.OrderID = Orders.OrderID 
+        WHERE Orders.UserID = ?"""
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
 
-        while (cursor.moveToNext()) {
-            val bookingDetails = "${cursor.getString(1)}: ${cursor.getString(2)} -> ${cursor.getString(3)} | ${cursor.getString(4)} | User: ${cursor.getString(5)}"
-            bookings.add(bookingDetails)
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    val pickupLocation = it.getString(it.getColumnIndex("PickupLocation"))
+                    val dropoffLocation = it.getString(it.getColumnIndex("DropoffLocation"))
+                    val bookingDate = it.getString(it.getColumnIndex("BookingDate"))
+                    val status = it.getString(it.getColumnIndex("Status"))
+
+                    bookingsList.add("Маршрут: $pickupLocation → $dropoffLocation\nДата: $bookingDate, Статус: $status")
+                } while (it.moveToNext())
+            }
         }
-        cursor.close()
-        return bookings
-    }
+
+        return bookingsList
+    }*/
+
 
 
     fun createBooking(orderId: Int, pickupLocation: String, dropoffLocation: String, status: String, userId: Int): Long {
@@ -144,6 +152,51 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
         }
         cursor.close()
         return userId
+    }
+
+
+    fun checkTableExists(tableName: String): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            arrayOf(tableName)
+        )
+        val exists = cursor.count > 0
+        cursor.close()
+        return exists
+    }
+
+    @SuppressLint("Range")
+    fun getAllBookings(): List<HashMap<String, Any>> {
+        val bookings = ArrayList<HashMap<String, Any>>()
+
+        val cursor = readableDatabase.rawQuery(
+            """SELECT Booking.BookingID, Orders.OrderID, Booking.BookingDate,  
+                  Booking.PickupLocation, Booking.DropoffLocation, Booking.Status 
+           FROM Booking""",
+            null // Убираем параметр, так как больше не фильтруем по пользователю
+        )
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    val booking = HashMap<String, Any>()
+                    booking["BookingID"] = it.getInt(it.getColumnIndex("BookingID"))
+                    booking["OrderID"] = it.getInt(it.getColumnIndex("OrderID"))
+                    booking["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation"))
+                    booking["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation"))
+                    booking["Status"] = it.getString(it.getColumnIndex("Status"))
+
+                    // Преобразование BookingDate в строку, если она есть
+                    val bookingDate = it.getString(it.getColumnIndex("BookingDate"))
+                    booking["BookingDate"] = bookingDate ?: "N/A"  // Если дата отсутствует, выводим "N/A"
+
+                    bookings.add(booking)
+                } while (it.moveToNext())
+            }
+        }
+
+        return bookings
     }
 
 
