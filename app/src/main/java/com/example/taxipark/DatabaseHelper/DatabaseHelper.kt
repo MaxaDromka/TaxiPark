@@ -10,7 +10,7 @@ import com.example.taxipark.Driver
 import com.example.taxipark.User
 
 class DatabaseHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
-    SQLiteOpenHelper(context, "BDTAxiPark.db", null, 3) {
+    SQLiteOpenHelper(context, "BDTAxiPark.db", null, 4) {
 
 
     override fun onCreate(db: SQLiteDatabase?) {

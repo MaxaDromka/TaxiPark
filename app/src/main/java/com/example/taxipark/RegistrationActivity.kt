@@ -41,6 +41,15 @@ class RegistrationActivity : AppCompatActivity() {
                 stmt.bindString(4, passwordText)
                 stmt.executeInsert()
 
+                // Сохранение данных пользователя в SharedPreferences
+                val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    putString("LoggedInUsername", userNameText)
+                    putString("LoggedInEmail", emailText)
+                    putString("LoggedInPhoneNumber", phoneNumberText)
+                    apply() // Применить изменения
+                }
+
                 Toast.makeText(this, "User Registered Successfully", Toast.LENGTH_SHORT).show()
                 finish()  // Close the registration screen and return to the main screen
             } else {
