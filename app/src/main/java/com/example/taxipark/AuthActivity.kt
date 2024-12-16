@@ -34,13 +34,13 @@ class AuthActivity : AppCompatActivity() {
                     val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
                     sharedPreferences.edit().putInt("LoggedInUserId", userId).apply()
 
-                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show()
                     finish() // Переход к основному экрану
                 } else {
-                    Toast.makeText(this, "Invalid Username or Password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
     }
