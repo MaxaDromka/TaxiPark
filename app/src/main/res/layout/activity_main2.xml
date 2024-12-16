@@ -45,16 +45,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/granta" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visit Blog"
-                android:textAllCaps="false"
-                android:layout_gravity="end"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:layout_margin="10dp"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -90,16 +80,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/granta" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visit Blog"
-                android:textAllCaps="false"
-                android:layout_gravity="end"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:layout_margin="10dp"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -133,17 +113,6 @@
                 android:layout_height="154dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/granta" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visit Blog"
-                android:textAllCaps="false"
-                android:layout_gravity="end"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:layout_margin="10dp"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -178,17 +147,6 @@
                 android:layout_height="154dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/granta" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visit Blog"
-                android:textAllCaps="false"
-                android:layout_gravity="end"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:layout_margin="10dp"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -222,17 +180,6 @@
                 android:layout_height="154dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/granta" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visit Blog"
-                android:textAllCaps="false"
-                android:layout_gravity="end"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:layout_margin="10dp"/>
-
         </LinearLayout>
 
     </LinearLayout>

@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.taxipark.DatabaseHelper.DbHelepr2
-
 class NewBookingActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DbHelepr2
@@ -30,17 +29,30 @@ class NewBookingActivity : AppCompatActivity() {
             val dropoff = dropoffLocation.text.toString()
 
             if (pickup.isNotEmpty() && dropoff.isNotEmpty()) {
-                // Создаем бронирование
-                val userId = 1 // Получите ID текущего пользователя
-                val orderId = 1 // Для упрощения, можно генерировать заказ вручную
-                val status = "Confirmed"
-                dbHelper.createBooking(orderId, pickup, dropoff, status, userId)
+                // Получаем ID текущего пользователя из SharedPreferences
+                val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
+                val userId = sharedPreferences.getInt("LoggedInUserId", -1)
 
-                Toast.makeText(this, "Booking Confirmed", Toast.LENGTH_SHORT).show()
-                finish() // Закрываем активность и возвращаемся на экран с бронированиями
+                if (userId != -1) {
+                    // Создаем бронирование с учетом UserID
+                    val orderId = 1  // В реальном приложении OrderID должен быть динамическим
+                    val status = "Confirmed"
+                    dbHelper.createBooking(userId, orderId, pickup, dropoff, status)
+
+                    // Уведомление об успешном бронировании
+                    Toast.makeText(this, "Booking Confirmed", Toast.LENGTH_SHORT).show()
+
+                    // Завершаем текущую активность
+                    setResult(RESULT_OK)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Please log in to make a booking", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Please enter both locations", Toast.LENGTH_SHORT).show()
             }
         }
     }
 }
+
+

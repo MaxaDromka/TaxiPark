@@ -6,12 +6,18 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.sql.SQLException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     private val mContext: Context = context
@@ -26,7 +32,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
     companion object {
         private const val DB_NAME = "BDTAxiPark.db"
-        private const val DB_VERSION = 10
+        private const val DB_VERSION = 14
     }
 
     init {
@@ -131,17 +137,33 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
 
 
-    fun createBooking(orderId: Int, pickupLocation: String, dropoffLocation: String, status: String, userId: Int): Long {
+    fun createBooking(userId: Int, orderId: Int, pickupLocation: String, dropoffLocation: String, status: String) {
         val db = writableDatabase
-        val contentValues = ContentValues().apply {
-            put("OrderID", orderId)
-            put("BookingDate", System.currentTimeMillis())
+        val values = ContentValues().apply {
+            //put("OrderID", orderId)
             put("PickupLocation", pickupLocation)
             put("DropoffLocation", dropoffLocation)
             put("Status", status)
+            put("UserID", userId)  // Привязываем бронирование к конкретному пользователю
+            put("BookingDate", System.currentTimeMillis())  // Добавим текущую дату/время
         }
-        return db.insert("Bookings", null, contentValues)
+
+        try {
+            val result = db.insertOrThrow("Reservation", null, values)
+            if (result != -1L) {
+                Log.d("NewBookingActivity", "Booking saved successfully!")
+            } else {
+                Log.d("NewBookingActivity", "Error saving booking")
+            }
+        } catch (e: SQLException) {
+            Log.e("NewBookingActivity", "Error saving booking: ${e.message}")
+            e.printStackTrace()
+        }
     }
+
+
+
+
 
     fun getUserIdByUsername(username: String): Int {
         val db = readableDatabase
@@ -166,15 +188,17 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
         return exists
     }
 
+    // Метод для получения списка бронирований пользователя
     @SuppressLint("Range")
-    fun getAllBookings(): List<HashMap<String, Any>> {
+    fun getUserBookings(userId: Int): List<HashMap<String, Any>> {
         val bookings = ArrayList<HashMap<String, Any>>()
 
         val cursor = readableDatabase.rawQuery(
-            """SELECT Booking.BookingID, Orders.OrderID, Booking.BookingDate,  
-                  Booking.PickupLocation, Booking.DropoffLocation, Booking.Status 
-           FROM Booking""",
-            null // Убираем параметр, так как больше не фильтруем по пользователю
+            """SELECT Booking.BookingID, Orders.OrderID, Booking.PickupLocation, Booking.DropoffLocation, Booking.Status, Booking.BookingDate
+           FROM Booking
+           LEFT JOIN Orders ON Booking.OrderID = Orders.OrderID
+           WHERE Orders.UserID = ?""",
+            arrayOf(userId.toString())
         )
 
         cursor.use {
@@ -186,11 +210,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
                     booking["PickupLocation"] = it.getString(it.getColumnIndex("PickupLocation"))
                     booking["DropoffLocation"] = it.getString(it.getColumnIndex("DropoffLocation"))
                     booking["Status"] = it.getString(it.getColumnIndex("Status"))
-
-                    // Преобразование BookingDate в строку, если она есть
-                    val bookingDate = it.getString(it.getColumnIndex("BookingDate"))
-                    booking["BookingDate"] = bookingDate ?: "N/A"  // Если дата отсутствует, выводим "N/A"
-
+                    booking["BookingDate"] = it.getString(it.getColumnIndex("BookingDate"))
                     bookings.add(booking)
                 } while (it.moveToNext())
             }
@@ -198,6 +218,10 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
         return bookings
     }
+
+
+
+
 
 
 

@@ -44,16 +44,16 @@ class RegistrationActivity : AppCompatActivity() {
                 // Сохранение данных пользователя в SharedPreferences
                 val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
                 with(sharedPreferences.edit()) {
-                    putString("LoggedInUsername", userNameText)
-                    putString("LoggedInEmail", emailText)
-                    putString("LoggedInPhoneNumber", phoneNumberText)
+                    putString("Логин", userNameText)
+                    putString("Почта", emailText)
+                    putString("Номер телеофна", phoneNumberText)
                     apply() // Применить изменения
                 }
 
-                Toast.makeText(this, "User Registered Successfully", Toast.LENGTH_SHORT).show()
-                finish()  // Close the registration screen and return to the main screen
+                Toast.makeText(this, "Вы успешно зарегистрировались", Toast.LENGTH_SHORT).show()
+                finish()
             } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
     }
