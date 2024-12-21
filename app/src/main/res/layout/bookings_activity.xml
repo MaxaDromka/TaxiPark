@@ -2,9 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
 
-    <!-- Кнопка для создания нового бронирования -->
+    <TextView
+        android:id="@+id/bookingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Список бронирований"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
     <Button
         android:id="@+id/newBookingButton"
         android:layout_width="wrap_content"
@@ -12,11 +23,11 @@
         android:text="Новое бронирование"
         android:layout_margin="16dp" />
 
-    <!-- RecyclerView для отображения списка бронирований -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookingsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:nestedScrollingEnabled="false"
         android:padding="16dp"/>
 </LinearLayout>

@@ -3,24 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Создание заказа"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выберите водителя"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
 
     <Spinner
         android:id="@+id/driverSpinner"
-        android:layout_width="381dp"
-        android:layout_height="74dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/spinner_background" />
 
     <EditText
         android:id="@+id/pickupLocation"
-        android:layout_width="384dp"
-        android:layout_height="95dp"
-        android:hint="Pickup Location" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Пункт отправления"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/dropoffLocation"
-        android:layout_width="394dp"
-        android:layout_height="58dp"
-        android:hint="Dropoff Location" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Пункт назначения"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:layout_marginBottom="32dp" />
 
     <Button
         android:id="@+id/saveOrderButton"

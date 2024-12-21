@@ -59,14 +59,12 @@ class BookingsActivity : AppCompatActivity() {
 
         if (userId != -1) {
             val bookings = ArrayList<HashMap<String, Any>>()
+
+            // Query including ScheduledDateTime
             val cursor = mDb.rawQuery(
-                """SELECT Reservation.ReservationID, Reservation.PickupLocation,
-              Reservation.DropoffLocation, Reservation.Status, Reservation.BookingDate
-       FROM Reservation
-       WHERE Reservation.UserID = ?""",
+                """SELECT Reservation.ReservationID, Reservation.PickupLocation,  Reservation.DropoffLocation, Reservation.Status, Reservation.BookingDate  FROM Reservation  WHERE Reservation.UserID = ?""",
                 arrayOf(userId.toString())
             )
-
 
             cursor.use {
                 if (it.moveToFirst()) {
@@ -91,6 +89,7 @@ class BookingsActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
 

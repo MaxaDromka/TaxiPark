@@ -74,7 +74,7 @@ class CreateOrderActivity : AppCompatActivity() {
                     val driverID = it.getInt(it.getColumnIndex("DriverID"))
                     val name = it.getString(it.getColumnIndex("Name"))
 
-                    driverNames.add(name) // Добавляем только имя водителя
+                    driverNames.add(name) 
                     driverIdMap[name] = driverID // Сохраняем соответствие имя -> ID
                 } while (it.moveToNext())
             }

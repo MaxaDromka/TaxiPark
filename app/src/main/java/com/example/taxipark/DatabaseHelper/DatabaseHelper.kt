@@ -13,14 +13,26 @@ class DatabaseHelper(val context: Context, val factory: SQLiteDatabase.CursorFac
     SQLiteOpenHelper(context, "BDTAxiPark.db", null, 4) {
 
 
-    override fun onCreate(db: SQLiteDatabase?) {
-        val createUsersTable = "CREATE TABLE users (id INTEGER PRIMARY KEY, login TEXT, password TEXT)"
-
-
-
-        db!!.execSQL(createUsersTable)
-        //db.execSQL(createDriversTable)
+    override fun onCreate(db: SQLiteDatabase) {
+        val createTableQuery = """
+        CREATE TABLE IF NOT EXISTS Photos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            imagePath TEXT NOT NULL
+        )
+    """
+        db.execSQL(createTableQuery)
     }
+
+    fun addPhoto(imagePath: String) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put("imagePath", imagePath)
+        }
+        db.insert("Photos", null, values)
+    }
+
+
+
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS users")
