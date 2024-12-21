@@ -44,9 +44,9 @@ class RegistrationActivity : AppCompatActivity() {
                 // Сохранение данных пользователя в SharedPreferences
                 val sharedPreferences = getSharedPreferences("TaxiParkPrefs", MODE_PRIVATE)
                 with(sharedPreferences.edit()) {
-                    putString("Логин", userNameText)
-                    putString("Почта", emailText)
-                    putString("Номер телеофна", phoneNumberText)
+                    putString("LoggedInUsername", userNameText) // Make sure this key matches in ProfileActivity
+                    putString("LoggedInEmail", emailText) // Make sure this key matches in ProfileActivity
+                    putString("LoggedInPhoneNumber", phoneNumberText) // Make sure this key matches in ProfileActivity
                     apply() // Применить изменения
                 }
 

@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
+import com.example.taxipark.User
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -32,7 +33,7 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
 
     companion object {
         private const val DB_NAME = "BDTAxiPark.db"
-        private const val DB_VERSION = 14
+        private const val DB_VERSION = 16
     }
 
     init {
@@ -140,12 +141,11 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
     fun createBooking(userId: Int, orderId: Int, pickupLocation: String, dropoffLocation: String, status: String) {
         val db = writableDatabase
         val values = ContentValues().apply {
-            //put("OrderID", orderId)
             put("PickupLocation", pickupLocation)
             put("DropoffLocation", dropoffLocation)
             put("Status", status)
-            put("UserID", userId)  // Привязываем бронирование к конкретному пользователю
-            put("BookingDate", System.currentTimeMillis())  // Добавим текущую дату/время
+            put("UserID", userId)
+            put("BookingDate", System.currentTimeMillis())
         }
 
         try {
@@ -160,8 +160,6 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
             e.printStackTrace()
         }
     }
-
-
 
 
 
@@ -219,10 +217,35 @@ class DbHelepr2 (context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB
         return bookings
     }
 
+    @SuppressLint("Range")
+    fun getUserById(userId: Int): User {
+        val db = this.readableDatabase
+
+        // SQL запрос для получения данных пользователя по его ID
+        val query = "SELECT Username, Email, PhoneNumber FROM Users WHERE UserId = ?"
+
+        // Используем курсор для извлечения данных
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+
+        // Проверка, если данные найдены
+        if (cursor != null && cursor.moveToFirst()) {
+            val username = cursor.getString(cursor.getColumnIndex("Username"))
+            val email = cursor.getString(cursor.getColumnIndex("Email"))
 
 
+            // Закрываем курсор после использования
+            cursor.close()
+
+            // Создаем и возвращаем объект пользователя
+            return User(username, email)
+        } else {
+            cursor.close()
+            // Если данные не найдены, выбрасываем исключение или возвращаем пустого пользователя
+            throw Exception("User not found")
+        }
 
 
+    }
 
 
 

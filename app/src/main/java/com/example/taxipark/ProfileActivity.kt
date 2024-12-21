@@ -31,11 +31,6 @@ class ProfileActivity : AppCompatActivity() {
         emailTextView.text = email ?: "Не указано"
         phoneNumberTextView.text = phoneNumber ?: "Не указано"
 
-
-            //val tableExists = databaseHelper.getUserBookings(1)
-        //Log.d("DatabaseCheck", "Таблица Bookings существует: $tableExists")
-
-
     }
 
 }
